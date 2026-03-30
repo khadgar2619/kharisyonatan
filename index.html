@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kharis Yonatan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #f4f3ef; --border: #e0ddd6;
+      --border-light: #ece9e2; --text: #1a1a18; --muted: #9a9690;
+      --accent: #b8860b; --accent-light: #f0e6c8; --accent-dim: #d4a843;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.8; overflow-x: hidden; }
+    .top-line { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent 0%, var(--accent) 40%, var(--accent-dim) 60%, transparent 100%); z-index: 200; }
+    nav { position: fixed; top: 3px; left: 0; right: 0; z-index: 100; padding: 18px 56px; display: flex; justify-content: space-between; align-items: center; background: rgba(250,250,248,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+    nav.scrolled { border-color: var(--border); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text); text-decoration: none; letter-spacing: 0.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    section { padding: 100px 56px; }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-label { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--accent); margin-bottom: 48px; display: flex; align-items: center; gap: 16px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    #home { min-height: 100vh; display: flex; align-items: center; padding-top: 120px; position: relative; overflow: hidden; }
+    #home::before { content: 'KY'; position: absolute; right: -40px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-size: 320px; font-weight: 700; color: var(--border-light); line-height: 1; pointer-events: none; user-select: none; }
+    .hero-inner { max-width: 720px; opacity: 0; transform: translateY(24px); animation: fadeUp 0.8s ease forwards 0.2s; }
+    .hero-tag { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(54px, 8vw, 96px); font-weight: 700; line-height: 0.95; color: var(--text); margin-bottom: 6px; }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-role { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 36px; }
+    .hero-quote { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: #6a6660; line-height: 1.6; border-left: 3px solid var(--accent-light); padding-left: 20px; margin-bottom: 44px; max-width: 520px; }
+    .hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
+    .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--text); line-height: 1; display: block; }
+    .hero-stat-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .hero-stat + .hero-stat { border-left: 1px solid var(--border); padding-left: 40px; }
+    #about { background: var(--surface); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .about-block { background: var(--bg); padding: 36px 32px; border: 1px solid var(--border); transition: border-color 0.3s; }
+    .about-block:hover { border-color: var(--accent-dim); }
+    .about-block-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .about-block p { color: #6a6660; line-height: 2.1; font-size: 12px; }
+    .about-block p strong { color: var(--text); font-weight: 400; }
+    .principles-list { display: flex; flex-direction: column; }
+    .principle { display: grid; grid-template-columns: 48px 1fr; gap: 28px; padding: 32px 0; border-bottom: 1px solid var(--border-light); transition: padding-left 0.25s; cursor: default; }
+    .principle:first-child { border-top: 1px solid var(--border-light); }
+    .principle:hover { padding-left: 8px; }
+    .principle-num { font-size: 10px; color: var(--accent); letter-spacing: 0.15em; padding-top: 4px; }
+    .principle-text { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--text); line-height: 1.4; margin-bottom: 8px; }
+    .principle-sub { font-size: 11px; color: var(--muted); line-height: 1.9; }
+    #interests { background: var(--surface); }
+    .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .interest-card { background: var(--bg); padding: 32px 28px; border: 1px solid var(--border); transition: border-color 0.25s, transform 0.25s; cursor: default; }
+    .interest-card:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
+    .interest-icon { font-size: 24px; margin-bottom: 16px; display: block; }
+    .interest-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--text); margin-bottom: 10px; }
+    .interest-desc { font-size: 11px; color: var(--muted); line-height: 1.9; }
+    .blog-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+    .filter-btn { padding: 6px 16px; border: 1px solid var(--border); background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .blog-list { display: flex; flex-direction: column; gap: 2px; }
+    .blog-count { font-size: 10px; color: var(--muted); margin-bottom: 20px; }
+    .blog-count span { color: var(--accent); }
+    footer { background: var(--text); padding: 48px 56px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--bg); }
+    .footer-name span { color: var(--accent-dim); font-style: italic; }
+    .footer-info { font-size: 10px; color: #5a5a58; letter-spacing: 0.15em; text-align: right; line-height: 2; }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 56px; }
+    .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; } section { padding: 72px 24px; } .divider { margin: 0 24px; }
+      #home::before { display: none; } .about-grid { grid-template-columns: 1fr; }
+      .interests-grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 36px 24px; flex-direction: column; gap: 16px; text-align: center; }
+      .footer-info { text-align: center; } .hero-stats { gap: 24px; }
+      .hero-stat + .hero-stat { padding-left: 24px; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 9px; letter-spacing: 0.1em; }
+    }
+    @media (max-width: 600px) {
+      .interests-grid { grid-template-columns: 1fr; }
+      .nav-links { gap: 0; flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; column-gap: 12px; }
+      .nav-links a { font-size: 8px; letter-spacing: 0.08em; }
+      .hero-name { font-size: clamp(40px, 12vw, 64px); }
+      .hero-quote { font-size: 18px; }
+      .hero-photo-name { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+      .hero-socials { flex-wrap: wrap !important; }
+    }
+    @media (max-width: 600px) { .interests-grid { grid-template-columns: 1fr; } .nav-links { gap: 20px; } }
+      
+      .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 48px; left: 0; right: 0;
+        background: rgba(250,250,248,0.98);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; text-align: center; }
+      .nav-links a { display: block; padding: 14px 0; font-size: 11px; letter-spacing: 0.2em; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<nav id="nav">
+  <a href="#home" class="nav-logo">Kharis <span>Yonatan</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" onclick="closeMenu()">Biography</a></li>
+    <li><a href="#principles" onclick="closeMenu()">Principles</a></li>
+    <li><a href="#interests" onclick="closeMenu()">Interests</a></li>
+    <li><a href="#thoughts" onclick="closeMenu()">Thoughts</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section id="home">
+  <div class="section-inner">
+    <div class="hero-inner">
+      <div class="hero-tag">Est. 1994 — Investor - Philosophical Thinker</div>
+      <div class="hero-photo-name" style="display:flex;align-items:center;gap:32px;margin-bottom:6px;">
+        <img src="https://imgur.com/MumW0rI.jpg" alt="Kharis Yonatan" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-light);flex-shrink:0;"/>
+        <h1 class="hero-name">Kharis<br/><em>Yonatan</em></h1>
+      </div>
+      <p class="hero-quote">"Everything has a price. The question is always whether the value justifies it."</p>
+      <div class="hero-socials" style="display:flex;gap:12px;margin-top:28px;">
+        <a href="https://instagram.com/yonatankharis" target="_blank"
+          style="padding:7px 18px;border:1px solid var(--border);text-decoration:none;color:var(--muted);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.2s;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Instagram</a>
+        <a href="https://facebook.com/kharis.tan" target="_blank"
+          style="padding:7px 18px;border:1px solid var(--border);text-decoration:none;color:var(--muted);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.2s;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Facebook</a>
+        <a href="https://kompasiana.com/kharisyonatan0060" target="_blank"
+          style="padding:7px 18px;border:1px solid var(--border);text-decoration:none;color:var(--muted);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.2s;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Kompasiana</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">Biography</div>
+
+    <p class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#6a6660;line-height:1.9;max-width:780px;margin-bottom:48px;font-style:italic;">Kharis Yonatan (born 1994, Sukabumi, West Java, Indonesia) is a self-made investor, freelance SEO practitioner, and independent thinker based in Southeast Asia. The name Kharis is derived from the Greek word meaning <strong style="font-style:normal;color:var(--text);font-weight:400;">"grace"</strong> — a name his parents chose after years of waiting for a child they feared would never come.</p>
+
+    <div class="about-grid">
+      <div class="about-block fade-in">
+        <div class="about-block-label">Early Life</div>
+        <p>Born to Tan Kim Jauw (Rudi) and Lim Tjeh (Rita) — both of whom married above the age of 33, after years of difficulty conceiving. He attended <a href="https://bpkpenabur.or.id/tkk-bpk-penabur-sukabumi?menu=beranda" target="_blank" rel="noopener noreferrer">TKK Ketilang Sukabumi</a>, later acquired by <a href="https://bpkpenabur.or.id/" target="_blank" rel="noopener noreferrer">BPK Penabur</a>, then continued at <a href="https://bpkpenabur.or.id/sdk-bpk-penabur-sukabumi?menu=beranda" target="_blank" rel="noopener noreferrer">SDK BPK Penabur Sukabumi</a>. An early love for mathematics quietly dissolved after a strict teacher in third grade. The love for numbers, however, never entirely left him — it would resurface decades later in a different form.</p>
+      </div>
+      <div class="about-block fade-in">
+        <div class="about-block-label">Basketball & The First Departure</div>
+        <p>Introduced to basketball by a physical education teacher, what began as recreation became discipline. By grade five and six, he was competing regionally, helping his school place fourth in the BPK Penabur national sports competition across West Java. At <a href="https://bpkpenabur.or.id/smpk-bpk-penabur-sukabumi?menu=beranda" target="_blank" rel="noopener noreferrer">SMP BPK Penabur</a>, the team rarely finished below first. That track record earned him an invitation to <a href="https://sma1pskd.weebly.com/" target="_blank" rel="noopener noreferrer">SMA PSKD 1 Jakarta</a>. He went. And he came back. The five years that followed — ages fifteen to twenty — became the quiet foundation of everything that came after.</p>
+      </div>
+      <div class="about-block fade-in">
+        <div class="about-block-label">Loss & The Rebuild</div>
+        <p>His father passed away while the family business struggled. Relatives offered criticism instead of support. At twenty-three, he found footing as a remote SEO practitioner, then enrolled in an equivalency program and was accepted to <a href="https://www.truelifebpc.org.sg/church_weekly/far-eastern-bible-college-alumni-greetings/" target="_blank" rel="noopener noreferrer">Far Eastern Bible College Singapore</a>. His mother passed away while he was abroad. He returned to Indonesia without a degree, without a home, carrying debt from predatory lending. He returned to freelance SEO work, started investing — private bonds, equities, government instruments, physical gold. A carefully accumulated position in gold was eventually liquidated and converted into a property, owned outright. Five years. No inheritance. No safety net.</p>
+      </div>
+      <div class="about-block fade-in">
+        <div class="about-block-label">Philosophy</div>
+        <p>His intellectual formation resists easy categorization. He grew up within a Christian framework, studied theology formally in Singapore, and returned with a philosophical orientation shaped more by questions than by answers. His touchstone is Stoicism — practiced as a daily operating system, not an academic exercise. He thinks in systems. He evaluates everything through the lens of intrinsic value versus price paid. Anti-compromise as principle. Pragmatic in execution. The destination is fixed. The path is flexible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<<section id="principles">
+  <div class="section-inner">
+    <div class="section-label">Principles</div>
+    <p class="fade-in" style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:#6a6660;line-height:1.9;max-width:680px;margin-bottom:48px;">Most people have opinions. These are conclusions — non-negotiable, not because they were declared, but because they survived long enough to be trusted.</p>
+    <div class="principles-list">
+      <div class="principle fade-in">
+        <span class="principle-num">01</span>
+        <div>
+          <div class="principle-text">Everything has a price. Know what you're paying.</div>
+          <div class="principle-sub">Not just money — time, energy, opportunity, peace of mind. The real expensive things are never priced in currency.</div>
+        </div>
+      </div>
+      <div class="principle fade-in">
+        <span class="principle-num">02</span>
+        <div>
+          <div class="principle-text">Truth before comfort. Always.</div>
+          <div class="principle-sub">An echo chamber is the most expensive room you can live in. The cost shows up years later, in the form of decisions that felt right at the time.</div>
+        </div>
+      </div>
+      <div class="principle fade-in">
+        <span class="principle-num">03</span>
+        <div>
+          <div class="principle-text">Risk first. Opportunity second.</div>
+          <div class="principle-sub">Most people ask "how much can I make?" before "how much can I lose?" That's backwards. Understand the downside completely before acting on the upside.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="interests">
+  <div class="section-inner">
+    <div class="section-label">Interests</div>
+    <div class="interests-grid">
+      <div class="interest-card fade-in">
+        <span class="interest-icon">📈</span>
+        <div class="interest-name">Investing</div>
+        <div class="interest-desc">IDX, mutual funds, P2P, physical gold. Long horizon. Fundamentals over noise. Compounding over excitement.</div>
+      </div>
+      <div class="interest-card fade-in">
+        <span class="interest-icon">🎌</span>
+        <div class="interest-name">Anime & Manga</div>
+        <div class="interest-desc">Mystery. Thriller. Depth beneath the surface. Story over spectacle.</div>
+      </div>
+      <div class="interest-card fade-in">
+        <span class="interest-icon">🕹️</span>
+        <div class="interest-name">Retro Games</div>
+        <div class="interest-desc">Era when games had to be good to survive. Design by necessity. Born 1994 — grew up with the classics.</div>
+      </div>
+      <div class="interest-card fade-in">
+        <span class="interest-icon">🔍</span>
+        <div class="interest-name">Mystery & Horror</div>
+        <div class="interest-desc">Unexplained events. Eerie facts. Things that don't quite add up. The gaps in official narratives.</div>
+      </div>
+      <div class="interest-card fade-in">
+        <span class="interest-icon">📖</span>
+        <div class="interest-name">Philosophy</div>
+        <div class="interest-desc">Stoicism as daily practice. First principles as default mode. Background in theology — now applied to everything.</div>
+      </div>
+      <div class="interest-card fade-in">
+        <span class="interest-icon">☕</span>
+        <div class="interest-name">Coffee</div>
+        <div class="interest-desc">From bean to cup. The craft, the origin, the process. Currently exploring the business side.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="thoughts">
+  <div class="section-inner">
+    <div class="section-label">Thoughts</div>
+    <div class="blog-filter" id="filterBar">
+      <button class="filter-btn active" data-cat="all">All</button>
+    </div>
+    <div class="blog-count" id="blogCount"></div>
+    <div class="blog-list" id="blogList"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">Kharis <span>Yonatan</span></div>
+  <div class="footer-info">kharisyonatan.netlify.app<br/>Est. 1994 — Built from zero</div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  let allPosts = [];
+  let activeFilter = 'all';
+  let currentPage = 1;
+  const PER_PAGE = 2;
+
+  async function loadPosts() {
+    try {
+      const res = await fetch('thoughts.json?v=' + Date.now());
+      allPosts = await res.json();
+      buildFilters();
+      renderPosts();
+    } catch (e) {
+      document.getElementById('blogList').innerHTML =
+        '<div style="padding:48px;text-align:center;color:var(--muted);border:1px solid var(--border)">No thoughts yet.</div>';
+    }
+  }
+
+  function buildFilters() {
+    const cats = [...new Set(allPosts.map(t => t.category))];
+    const bar = document.getElementById('filterBar');
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.cat = cat;
+      btn.textContent = cat;
+      btn.addEventListener('click', () => { currentPage = 1; setFilter(cat); });
+      bar.appendChild(btn);
+    });
+  }
+
+  function setFilter(cat) {
+    activeFilter = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    renderPosts();
+  }
+
+  document.querySelector('.filter-btn[data-cat="all"]').addEventListener('click', () => { currentPage = 1; setFilter('all'); });
+
+  function renderPosts() {
+    const list = document.getElementById('blogList');
+    const count = document.getElementById('blogCount');
+    const filtered = activeFilter === 'all' ? allPosts : allPosts.filter(t => t.category === activeFilter);
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    const start = (currentPage - 1) * PER_PAGE;
+    const paginated = filtered.slice(start, start + PER_PAGE);
+
+    count.innerHTML = filtered.length > 0
+      ? `Showing <span>${start + 1}–${Math.min(start + PER_PAGE, filtered.length)}</span> of <span>${filtered.length}</span> articles`
+      : '';
+
+    document.getElementById('pagination')?.remove();
+
+    if (!paginated.length) {
+      list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--muted);border:1px solid var(--border)">Nothing here yet.</div>';
+      return;
+    }
+
+    list.innerHTML = paginated.map((t, i) => `
+      <a href="${t.url}" target="_blank"
+        style="display:block;padding:24px 32px;border:1px solid var(--border);text-decoration:none;color:var(--text);margin-bottom:2px;opacity:0;transform:translateY(12px);transition:opacity 0.5s ease ${i*0.07}s,transform 0.5s ease ${i*0.07}s,border-color 0.2s;"
+        onmouseover="this.style.borderColor='var(--accent-dim)'"
+        onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:9px;letter-spacing:0.3em;color:var(--accent);margin-bottom:8px;">KOMPASIANA — ${t.date}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;">${t.title}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;">${t.desc}</div>
+      </a>
+    `).join('');
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll('#blogList a').forEach(el => { el.style.opacity='1'; el.style.transform='translateY(0)'; });
+    });
+
+    if (totalPages > 1) {
+      const pag = document.createElement('div');
+      pag.id = 'pagination';
+      pag.style.cssText = 'display:flex;gap:8px;margin-top:24px;align-items:center;';
+      pag.innerHTML = `
+        ${currentPage > 1 ? `<button onclick="changePage(${currentPage-1})" style="padding:7px 18px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← Prev</button>` : ''}
+        <span style="font-size:10px;color:var(--muted);letter-spacing:0.15em;">${currentPage} / ${totalPages}</span>
+        ${currentPage < totalPages ? `<button onclick="changePage(${currentPage+1})" style="padding:7px 18px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Next →</button>` : ''}
+      `;
+      list.after(pag);
+    }
+  }
+
+  function changePage(page) {
+    currentPage = page;
+    renderPosts();
+    document.getElementById('thoughts').scrollIntoView({ behavior: 'smooth' });
+  }
+
+    function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navLinks').classList.remove('open');
+  }
+  loadPosts();
+</script>
+</body>
+</html>

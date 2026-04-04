@@ -334,6 +334,10 @@ body{
   white-space:nowrap;
 }
 .toast.show{transform:translateX(-50%) translateY(0);}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,0.5);}
+  50%{box-shadow:0 0 0 8px rgba(231,76,60,0);}
+}
 </style>
 </head>
 <body>
@@ -350,6 +354,9 @@ body{
       <div class="net-worth-value" id="netWorth">Rp 0</div>
       <div class="passive-income" id="passiveIncome">+Rp 0/detik</div>
     </div>
+  </div>
+  <div style="margin-top:10px;">
+    <a href="#clickerBtn" style="display:inline-block;background:#e74c3c;color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;padding:8px 18px;border-radius:6px;text-decoration:none;animation:pulse 1.5s ease-in-out infinite;">▶ MAIN SEKARANG</a>
   </div>
 </div>
 
@@ -411,6 +418,7 @@ const INVESTMENTS = [
   {id:'obligasi', name:'Obligasi Negara', icon:'🏛️', desc:'Surat utang pemerintah (ORI/SBR)', baseCost:1000000, baseIncome:500, maxOwned:30, tip:'Minimal Rp 1 Juta. Kupon 6-7% per tahun, dijamin negara.'},
   {id:'emas', name:'Emas Fisik', icon:'🥇', desc:'Lindung nilai inflasi', baseCost:2000000, baseIncome:800, maxOwned:25, tip:'Beli batangan mulai 2 gram. Safe haven saat krisis.'},
   {id:'saham', name:'Saham IDX', icon:'📈', desc:'Kepemilikan perusahaan publik', baseCost:5000000, baseIncome:2500, maxOwned:20, tip:'1 lot = 100 lembar. Blue chip mulai Rp 5jt/lot. Volatil!'},
+  {id:'crypto', name:'Crypto', icon:'₿', desc:'Aset digital desentralisasi', baseCost:8000000, baseIncome:4000, maxOwned:20, tip:'Volatil ekstrem. Beli saat orang takut, jual saat orang serakah. DYOR!'},
   {id:'p2p', name:'P2P Lending', icon:'🤝', desc:'Pinjamkan ke nasabah UKM', baseCost:10000000, baseIncome:6000, maxOwned:15, tip:'Return 10-18%/thn tapi risiko gagal bayar. Diversifikasi!'},
   {id:'properti', name:'Properti', icon:'🏠', desc:'Aset riil + passive income sewa', baseCost:100000000, baseIncome:50000, maxOwned:10, tip:'DP rumah mulai Rp 100jt. Sewakan untuk cash flow bulanan.'},
   {id:'venture', name:'Venture Capital', icon:'🚀', desc:'Investasi startup early stage', baseCost:500000000, baseIncome:250000, maxOwned:5, tip:'Angel investing mulai Rp 500jt. 1 dari 10 bisa 100x!'},
@@ -611,14 +619,27 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Passive income tick
+// Passive income tick — update money only, no full re-render
+let tickCount = 0;
 setInterval(() => {
   const income = getPassiveIncome();
   if (income > 0) {
     state.money += income / 10;
     state.totalEarned += income / 10;
-    updateUI();
     checkMilestones();
+  }
+  tickCount++;
+  // Update header every tick
+  document.getElementById('netWorth').textContent = formatRp(state.money);
+  const passive = getPassiveIncome();
+  document.getElementById('passiveIncome').textContent = '+' + formatRp(passive) + '/detik';
+  document.getElementById('clickValue').textContent = '+' + formatRp(getBaseClickValue()) + '/klik';
+  // Full render every 10 ticks (1 second) to avoid destroying click targets
+  if (tickCount % 10 === 0) {
+    renderInvestments();
+    document.getElementById('totalClicks').textContent = state.totalClicks.toLocaleString('id');
+    document.getElementById('prestigeCount').textContent = state.prestige + 'x';
+    document.getElementById('multiplierVal').textContent = state.multiplier.toFixed(1) + 'x';
   }
 }, 100);
 

@@ -357,7 +357,7 @@ body{
   <button class="clicker-btn" id="clickerBtn" onclick="handleClick(event)">
     <span class="clicker-icon">💼</span>
     <span class="clicker-label">Kerja Keras</span>
-    <span class="click-value" id="clickValue">+Rp 100/klik</span>
+    <span class="click-value" id="clickValue">+Rp 5.000/klik</span>
   </button>
 </div>
 
@@ -387,7 +387,7 @@ body{
 <div class="section-title">Prestige</div>
 
 <div class="prestige-section">
-  <button class="prestige-btn" onclick="prestige()">Reset + Prestige (butuh Rp 1 Miliar)</button>
+  <button class="prestige-btn" onclick="prestige()">Reset + Prestige (butuh Rp 10 Miliar)</button>
   <div class="prestige-note">Semua reset, tapi multiplier permanen naik 1.5x</div>
 </div>
 
@@ -406,23 +406,23 @@ body{
 
 <script>
 const INVESTMENTS = [
-  {id:'deposito', name:'Deposito', icon:'🏦', desc:'Bunga tetap, risiko rendah', baseCost:500, baseIncome:2, maxOwned:50, tip:'Instrumen paling aman. Return 5-7% per tahun.'},
-  {id:'reksadana', name:'Reksadana', icon:'📊', desc:'Dikelola manajer investasi', baseCost:2000, baseIncome:10, maxOwned:40, tip:'Cocok untuk investor pemula. Diversifikasi otomatis.'},
-  {id:'obligasi', name:'Obligasi Negara', icon:'🏛️', desc:'Surat utang pemerintah', baseCost:8000, baseIncome:45, maxOwned:30, tip:'Lebih aman dari saham. Kupon tetap per tahun.'},
-  {id:'emas', name:'Emas Fisik', icon:'🥇', desc:'Lindung nilai inflasi', baseCost:25000, baseIncome:150, maxOwned:25, tip:'Safe haven. Naik saat ekonomi tidak pasti.'},
-  {id:'saham', name:'Saham IDX', icon:'📈', desc:'Kepemilikan perusahaan', baseCost:80000, baseIncome:500, maxOwned:20, tip:'Potensi return tinggi, tapi volatil. Analisis dulu!'},
-  {id:'properti', name:'Properti', icon:'🏠', desc:'Aset nyata + passive income', baseCost:250000, baseIncome:1800, maxOwned:15, tip:'Aset riil yang tidak bisa jadi nol. Tapi tidak likuid.'},
-  {id:'p2p', name:'P2P Lending', icon:'🤝', desc:'Pinjamkan ke nasabah', baseCost:600000, baseIncome:5000, maxOwned:10, tip:'Return tinggi, tapi risiko gagal bayar ada. Diversifikasi!'},
-  {id:'venture', name:'Venture Capital', icon:'🚀', desc:'Investasi startup early stage', baseCost:2000000, baseIncome:20000, maxOwned:5, tip:'High risk high reward. 1 dari 10 bisa 100x.'},
+  {id:'deposito', name:'Deposito', icon:'🏦', desc:'Bunga tetap, risiko rendah', baseCost:100000, baseIncome:50, maxOwned:50, tip:'Instrumen paling aman. Minimal Rp 100rb di bank digital.'},
+  {id:'reksadana', name:'Reksadana', icon:'📊', desc:'Dikelola manajer investasi', baseCost:100000, baseIncome:80, maxOwned:40, tip:'Mulai dari Rp 100rb di Bibit/Bareksa. Diversifikasi otomatis.'},
+  {id:'obligasi', name:'Obligasi Negara', icon:'🏛️', desc:'Surat utang pemerintah (ORI/SBR)', baseCost:1000000, baseIncome:500, maxOwned:30, tip:'Minimal Rp 1 Juta. Kupon 6-7% per tahun, dijamin negara.'},
+  {id:'emas', name:'Emas Fisik', icon:'🥇', desc:'Lindung nilai inflasi', baseCost:2000000, baseIncome:800, maxOwned:25, tip:'Beli batangan mulai 2 gram. Safe haven saat krisis.'},
+  {id:'saham', name:'Saham IDX', icon:'📈', desc:'Kepemilikan perusahaan publik', baseCost:5000000, baseIncome:2500, maxOwned:20, tip:'1 lot = 100 lembar. Blue chip mulai Rp 5jt/lot. Volatil!'},
+  {id:'p2p', name:'P2P Lending', icon:'🤝', desc:'Pinjamkan ke nasabah UKM', baseCost:10000000, baseIncome:6000, maxOwned:15, tip:'Return 10-18%/thn tapi risiko gagal bayar. Diversifikasi!'},
+  {id:'properti', name:'Properti', icon:'🏠', desc:'Aset riil + passive income sewa', baseCost:100000000, baseIncome:50000, maxOwned:10, tip:'DP rumah mulai Rp 100jt. Sewakan untuk cash flow bulanan.'},
+  {id:'venture', name:'Venture Capital', icon:'🚀', desc:'Investasi startup early stage', baseCost:500000000, baseIncome:250000, maxOwned:5, tip:'Angel investing mulai Rp 500jt. 1 dari 10 bisa 100x!'},
 ];
 
 const MILESTONES = [
-  {id:'m1', text:'Kumpulkan Rp 10.000', target:10000, reward:'Klik +50%', achieved:false},
+  {id:'m1', text:'Kumpulkan Rp 500.000', target:500000, reward:'Klik +50%', achieved:false},
   {id:'m2', text:'Beli Deposito pertama', target:'deposito_1', reward:'Income +10%', achieved:false},
-  {id:'m3', text:'Kumpulkan Rp 1 Juta', target:1000000, reward:'Klik +100%', achieved:false},
+  {id:'m3', text:'Kumpulkan Rp 50 Juta', target:50000000, reward:'Klik +100%', achieved:false},
   {id:'m4', text:'Punya 5 instrumen berbeda', target:'diversity_5', reward:'Semua income +20%', achieved:false},
-  {id:'m5', text:'Kumpulkan Rp 100 Juta', target:100000000, reward:'Multiplier +0.5x', achieved:false},
-  {id:'m6', text:'Kumpulkan Rp 1 Miliar', target:1000000000, reward:'Siap Prestige!', achieved:false},
+  {id:'m5', text:'Kumpulkan Rp 1 Miliar', target:1000000000, reward:'Multiplier +0.5x', achieved:false},
+  {id:'m6', text:'Kumpulkan Rp 10 Miliar', target:10000000000, reward:'Siap Prestige!', achieved:false},
 ];
 
 let state = {
@@ -439,17 +439,17 @@ let state = {
 
 function loadState() {
   try {
-    const saved = localStorage.getItem('likhongheng_v1');
+    const saved = localStorage.getItem('likhongheng_v2');
     if (saved) state = JSON.parse(saved);
   } catch(e) {}
 }
 
 function saveState() {
-  localStorage.setItem('likhongheng_v1', JSON.stringify(state));
+  localStorage.setItem('likhongheng_v2', JSON.stringify(state));
 }
 
 function getBaseClickValue() {
-  return 100 * state.multiplier * state.clickMultiplier;
+  return 5000 * state.multiplier * state.clickMultiplier;
 }
 
 function getPassiveIncome() {
@@ -512,7 +512,7 @@ function buyInvestment(id) {
 }
 
 function prestige() {
-  if (state.money < 1000000000) return showToast('Butuh Rp 1 Miliar dulu!');
+  if (state.money < 10000000000) return showToast('Butuh Rp 10 Miliar dulu!');
   if (!confirm('Reset semua progress? Multiplier akan naik permanen 1.5x!')) return;
   state.prestige++;
   state.multiplier = Math.pow(1.5, state.prestige);
